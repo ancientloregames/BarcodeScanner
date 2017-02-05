@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
@@ -26,24 +25,14 @@ import java.io.IOException;
 public class ScannerActivity extends AppCompatActivity implements CameraSourcePreview.CameraPreviewListener
 {
 	private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
-	private static final int REQ_CODE_CAMERA = 140;
+	private static final int CODE_REQ_CAMERA = 1001;
+	public static final int CODE_RC_GMS = 1002;
 
 	private static final String TAG = "Barcode-reader";
-	public static final String USE_ONLY_QR_CODE = "use_only_qr_code";
-
-	// intent request code to handle updating play services if needed.
-	public static final int RC_HANDLE_GMS = 9009;
-	public static final int RC_CLIENTS = 0xc0de;
-
-	// constants used to pass extra data in the intent
-	public static final String BarcodeObject = "Barcode";
 
 	private CameraSource mCameraSource;
 	private CameraSourcePreview mPreview;
 
-	/**
-	 * Initializes the UI and creates the detector pipeline.
-	 */
 	@Override
 	public void onCreate(Bundle icicle)
 	{
@@ -51,47 +40,26 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 
 		if (ContextCompat.checkSelfPermission(this, CAMERA_PERMISSION) != PackageManager.PERMISSION_GRANTED)
 		{
-			ActivityCompat.requestPermissions(this, new String[] { CAMERA_PERMISSION }, REQ_CODE_CAMERA);
+			ActivityCompat.requestPermissions(this, new String[] { CAMERA_PERMISSION }, CODE_REQ_CAMERA);
 		}
 		else
 		{
-			initActivity();
+			initialize();
 		}
 	}
 
-	private void initActivity()
+	private void initialize()
 	{
 		setContentView(R.layout.barcode_capture);
 		mPreview = (CameraSourcePreview) findViewById(R.id.preview);
-		createCameraSource(getIntent().getBooleanExtra(USE_ONLY_QR_CODE, false));
+		createCameraSource(true);
 	}
 
-	public void returnResult(final Barcode barcode)
-	{
-		Intent intent = new Intent().putExtra(BarcodeObject, barcode);
-		setResult(barcode != null ? CommonStatusCodes.SUCCESS : CommonStatusCodes.RESOLUTION_REQUIRED,
-				barcode != null ? intent : null);
-
-		finish();
-	}
-
-	/**
-	 * Creates and starts the camera.  Note that this uses a higher resolution in comparison
-	 * to other detection examples to enable the barcode detector to detect small barcodes
-	 * at long distances.
-	 * <p>
-	 * Suppressing InlinedApi since there is a check that the minimum version is met before using
-	 * the constant.
-	 */
 	@SuppressLint("InlinedApi")
 	private void createCameraSource(final boolean useOnlyQRCode)
 	{
 		Context context = getApplicationContext();
 
-		// A barcode detector is created to track barcodes.  An associated multi-processor instance
-		// is set to receive the barcode detection results, track the barcodes, and maintain
-		// graphics for each barcode on screen.  The factory is used by the multi-processor to
-		// create a separate tracker instance for each barcode.
 		BarcodeDetector.Builder builder = new BarcodeDetector.Builder(context);
 
 		if (useOnlyQRCode)
@@ -105,19 +73,8 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 
 		if (!barcodeDetector.isOperational())
 		{
-			// Note: The first time that an app using the barcode or face API is installed on a
-			// device, GMS will download a native libraries to the device in order to do detection.
-			// Usually this completes before the app is run for the first time.  But if that
-			// download has not yet completed, then the above call will not detect any barcodes
-			// and/or faces.
-			//
-			// isOperational() can be used to check if the required native libraries are currently
-			// available.  The detectors will automatically become operational once the library
-			// downloads complete on device.
 			Log.w(TAG, "Detector dependencies are not yet available.");
 
-			// Check for low storage.  If there is low storage, the native library will not be
-			// downloaded, so detection will not become operational.
 			IntentFilter lowstorageFilter = new IntentFilter(Intent.ACTION_DEVICE_STORAGE_LOW);
 			boolean hasLowStorage = registerReceiver(null, lowstorageFilter) != null;
 
@@ -127,9 +84,6 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 			}
 		}
 
-		// Creates and starts the camera.  Note that this uses a higher resolution in comparison
-		// to other detection examples to enable the barcode detector to detect small barcodes
-		// at long distances.
 		mCameraSource = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
 				.setFacing(isBackCameraAvailable() ? CameraSource.CAMERA_FACING_BACK : CameraSource.CAMERA_FACING_FRONT)
 				.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
@@ -147,14 +101,14 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 	{
 		switch (requestCode)
 		{
-			case REQ_CODE_CAMERA:
+			case CODE_REQ_CAMERA:
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
 				{
-					initActivity();
+					initialize();
 				}
 				else
 				{
-					returnResult(null);
+					finish();
 				}
 
 				break;
@@ -164,9 +118,6 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 		}
 	}
 
-	/**
-	 * Restarts the camera.
-	 */
 	@Override
 	protected void onResume()
 	{
@@ -174,9 +125,6 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 		startCameraSource();
 	}
 
-	/**
-	 * Stops the camera.
-	 */
 	@Override
 	protected void onPause()
 	{
@@ -188,10 +136,6 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 		}
 	}
 
-	/**
-	 * Releases the resources associated with the camera source, the associated detectors, and the
-	 * rest of the processing pipeline.
-	 */
 	@Override
 	protected void onDestroy()
 	{
@@ -203,19 +147,13 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 		}
 	}
 
-	/**
-	 * Starts or restarts the camera source, if it exists.  If the camera source doesn't exist yet
-	 * (e.g., because onResume was called before the camera source was created), this will be called
-	 * again when the camera source is created.
-	 */
 	private void startCameraSource()
 	{
-		// check that the device has play services available.
 		int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
 
 		if (code != ConnectionResult.SUCCESS)
 		{
-			GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS).show();
+			GoogleApiAvailability.getInstance().getErrorDialog(this, code, CODE_RC_GMS).show();
 		}
 
 		if (mCameraSource != null)
@@ -236,6 +174,6 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 	@Override
 	public void onPreviewError(String error)
 	{
-		returnResult(null);
+		finish();
 	}
 }

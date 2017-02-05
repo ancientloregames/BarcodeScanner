@@ -1,3 +1,4 @@
 <resources>
-	<string name="app_name">BarcodeScanner</string>
+	<string name="app_name" translatable="false">AL QR-Scanner</string>
+	<string name="low_storage_error">Not enough space</string>
 </resources>
