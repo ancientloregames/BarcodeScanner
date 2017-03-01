@@ -1,4 +1,15 @@
 <resources>
 	<string name="app_name" translatable="false">AL QR-Scanner</string>
 	<string name="low_storage_error">Not enough space</string>
+	<string name="label_link">Url Link</string>
+	<string name="label_wifi">Wifi Connection</string>
+	<string name="label_email">Email</string>
+	<string name="label_cevent">Calendar Event</string>
+	<string name="label_dicense">Driver License</string>
+	<string name="label_gpoint">Geo Point</string>
+	<string name="label_sms">SMS</string>
+	<string name="label_phone">Phone</string>
+	
+	<string name="message_noapp">No app for this action</string>
+	<string name="message_email">Send mail using…</string>
 </resources>

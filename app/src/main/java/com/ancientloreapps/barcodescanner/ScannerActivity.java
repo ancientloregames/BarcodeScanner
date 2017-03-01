@@ -67,7 +67,7 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 		getSupportFragmentManager()
 				.beginTransaction()
 				.add(listFragment,"list")
-				.commitNowAllowingStateLoss();
+				.commit();
 	}
 
 	@SuppressLint("InlinedApi")
