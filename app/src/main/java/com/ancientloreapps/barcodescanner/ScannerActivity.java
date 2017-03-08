@@ -7,15 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ListView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.MultiProcessor;
@@ -24,6 +21,10 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+
+/**
+ * ${PACKAGE_NAME}. Created by ${USER} on ${DATE}.
+ */
 
 public class ScannerActivity extends AppCompatActivity implements CameraSourcePreview.CameraPreviewListener
 {
@@ -58,16 +59,19 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 		createCameraSource(true);
 	}
 
-	public void manageResult(Barcode barcode)
+	public void manageResult(final Barcode barcode)
 	{
-		ListFragment listFragment = new ListFragment();
-		Bundle arguments = new Bundle();
-		arguments.putParcelable(ListFragment.ARGUMENT,barcode);
-		listFragment.setArguments(arguments);
-		getSupportFragmentManager()
-				.beginTransaction()
-				.add(listFragment,"list")
-				.commit();
+		runOnUiThread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				mCameraSource.stop();
+				Intent intent = new Intent(ScannerActivity.this, ResultActivity.class);
+				intent.putExtra(ResultActivity.ARGUMENT,barcode);
+				startActivity(intent);
+			}
+		});
 	}
 
 	@SuppressLint("InlinedApi")
@@ -95,7 +99,7 @@ public class ScannerActivity extends AppCompatActivity implements CameraSourcePr
 
 			if (hasLowStorage)
 			{
-				Log.w(TAG, getString(R.string.low_storage_error));
+				Log.w(TAG, getString(R.string.message_low_storage));
 			}
 		}
 

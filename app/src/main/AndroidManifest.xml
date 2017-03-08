@@ -21,6 +21,9 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+		<activity android:name=".ResultActivity"
+				  android:theme="@style/Theme.AppCompat.DayNight">
+		</activity>
 	</application>
 
 </manifest>

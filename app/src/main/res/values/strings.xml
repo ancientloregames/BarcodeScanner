@@ -1,6 +1,8 @@
 <resources>
 	<string name="app_name" translatable="false">AL QR-Scanner</string>
-	<string name="low_storage_error">Not enough space</string>
+	
+	<string name="button_save">Save</string>
+
 	<string name="label_link">Url Link</string>
 	<string name="label_wifi">Wifi Connection</string>
 	<string name="label_email">Email</string>
@@ -9,7 +11,30 @@
 	<string name="label_gpoint">Geo Point</string>
 	<string name="label_sms">SMS</string>
 	<string name="label_phone">Phone</string>
-	
+
+	<string name="exp_title">Title</string>
+	<string name="exp_url">Url</string>
+	<string name="exp_encription_type">Encription type</string>
+	<string name="exp_login">Login</string>
+	<string name="exp_password">Password</string>
+	<string name="exp_type">Type</string>
+	<string name="exp_address">Address</string>
+	<string name="exp_subject">Subject</string>
+	<string name="exp_message">Message</string>
+
+	<string name="encription_open">Open</string>
+	<string name="encription_wep">WEP</string>
+	<string name="encription_wpa">WPA</string>
+
+	<string name="email_type_home">Home</string>
+	<string name="email_type_work">Work</string>
+
+	<string name="misc_empty"> </string>
+	<string name="misc_unknown">Unknown</string>
+	<string name="misc_none">None</string>
+
 	<string name="message_noapp">No app for this action</string>
 	<string name="message_email">Send mail using…</string>
+	<string name="message_avaible">Avaible information</string>
+	<string name="message_low_storage">Not enough space</string>
 </resources>

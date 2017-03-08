@@ -10,7 +10,11 @@ import android.view.ViewGroup;
 import java.io.IOException;
 
 
-public class CameraSourcePreview extends ViewGroup
+/**
+ * ${PACKAGE_NAME}. Created by ${USER} on ${DATE}.
+ */
+
+class CameraSourcePreview extends ViewGroup
 {
 	private static final String TAG = "CameraSourcePreview";
 

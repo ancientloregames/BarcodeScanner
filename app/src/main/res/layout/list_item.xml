@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  android:layout_width="match_parent"
-			  android:layout_height="wrap_content"
-			  android:orientation="horizontal">
+			  android:layout_height="match_parent"
+			  android:orientation="horizontal"
+			  android:descendantFocusability="blocksDescendants">
 
 	<TextView
 		android:id="@+id/item"
 		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:layout_weight="1"/>
+		android:layout_height="match_parent"
+		android:layout_weight="1"
+		android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
+		android:gravity="center_vertical"
+		android:textColor="@android:color/black"
+		android:textSize="@dimen/list_item_title_font_size"
+		android:textStyle="bold"/>
 
-	<Button
+	<ImageButton
 		android:id="@+id/button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:contentDescription="@string/app_name"/>
+		android:layout_width="@dimen/list_item_size"
+		android:layout_height="@dimen/list_item_size"
+		android:gravity="center_vertical"
+		android:layout_margin="2dp"
+		android:contentDescription="@string/app_name"
+		android:onClick="onClickHandler"/>
 
 </LinearLayout>

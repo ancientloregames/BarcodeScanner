@@ -7,6 +7,10 @@ import com.google.android.gms.vision.barcode.Barcode;
 import java.lang.ref.WeakReference;
 
 
+/**
+ * ${PACKAGE_NAME}. Created by ${USER} on ${DATE}.
+ */
+
 class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode>
 {
 	private WeakReference<ScannerActivity> activity;

@@ -31,6 +31,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * ${PACKAGE_NAME}. Created by ${USER} on ${DATE}.
+ */
+
 @SuppressWarnings("deprecation")
 class CameraSource
 {
